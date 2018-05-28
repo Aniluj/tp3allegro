@@ -4,6 +4,13 @@
 #include<allegro5/allegro_native_dialog.h>
 #include<iostream>
 using namespace std;
+ struct Rect {
+	 float left;
+	 float top;
+	 float right;
+	 float bottom;
+
+};
 int main(int argc, char **argv){
 
 
@@ -11,6 +18,7 @@ int main(int argc, char **argv){
 	ALLEGRO_EVENT_QUEUE *queue;
 	ALLEGRO_BITMAP * bitmap = NULL;
 	ALLEGRO_BITMAP *bitmap2 = NULL;
+
 	al_init();
 	display = al_create_display(800, 600);
 	queue = al_create_event_queue();
@@ -66,8 +74,9 @@ int main(int argc, char **argv){
 		}
 		cout << "posx1 " << x << endl;
 		cout << "posx2 " << x2 << endl;
-		if (x + widthBitmap1/2 -5> x2&&y-50<y2+heightBitmap2/2&&y + heightBitmap1/2-5 > y2) {
+		if (x + widthBitmap1 > x2&&x<x2+widthBitmap2&&y<y2+heightBitmap2&&y + heightBitmap1 > y2) {
 			cout << "contacto" << endl;
+			running = false;
 				
 		}
 
@@ -78,59 +87,5 @@ int main(int argc, char **argv){
 	al_destroy_bitmap(bitmap);
 	return 0;
 
-/*
-	ALLEGRO_DISPLAY *display = NULL;
-	//ALLEGRO_BITMAP  *image = NULL;
-	ALLEGRO_EVENT_QUEUE *queue;
 
-	if (!al_init()) {
-		fprintf(stderr, "failed to initialize allegro!\n");
-		return -1;
-	}
-	if (!al_init()) {
-		al_show_native_message_box(display, "Error", "Error", "Failed to initialize allegro!",
-			NULL, ALLEGRO_MESSAGEBOX_ERROR);
-		return 0;
-	}
-
-//	if (!al_init_image_addon()) {
-	//	al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!",
-		//	NULL, ALLEGRO_MESSAGEBOX_ERROR);
-		//return 0;
-	//}
-	//queue = al_create_event_queue();
-	//al_install_keyboard();
-	
-	display = al_create_display(800, 600);
-	if (!display) {
-		fprintf(stderr, "failed to create display!\n");
-		return -1;
-	}
-	//image = al_load_bitmap("Blue_01.png");
-	//al_register_event_source(queue, al_get_keyboard_event_source());
-	//al_register_event_source(queue, al_get_display_event_source(display));
-	//if (!image) {
-		//al_show_native_message_box(display, "Error", "Error", "Failed to load image!",
-			//NULL, ALLEGRO_MESSAGEBOX_ERROR);
-		//al_destroy_display(display);
-		//return 0;
-	//}
-	bool run = false;
-	while (run) {
-		fprintf(stderr, "ciclo");
-		al_clear_to_color(al_map_rgb(0, 0, 0));
-		//al_draw_bitmap(image, 300, 300, 0);
-		al_flip_display();
-		//al_rest(2.0);
-		//ALLEGRO_EVENT event;
-		//al_wait_for_event(queue, &event);
-	//	if (event.type == ALLEGRO_EVENT_KEY_UP || event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-		//	run = false;
-	}
-	
-	al_destroy_display(display);
-//	al_destroy_bitmap(image);
-
-	return 0;
-	*/
 }
