@@ -3,14 +3,10 @@
 #include<allegro5/allegro_image.h>
 #include<allegro5/allegro_native_dialog.h>
 #include<iostream>
-using namespace std;
- struct Rect {
-	 float left;
-	 float top;
-	 float right;
-	 float bottom;
 
-};
+using namespace std;
+
+
 int main(int argc, char **argv){
 
 
@@ -27,9 +23,12 @@ int main(int argc, char **argv){
 	al_register_event_source(queue, al_get_keyboard_event_source());
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_init_image_addon();
+
 	bitmap = al_load_bitmap("Blue_01.png");
 	bitmap2 = al_load_bitmap("Blue_01.png");
+
 	bool running = true;
+
 	float x = 0;
 	float y = 0;
 
@@ -45,11 +44,13 @@ int main(int argc, char **argv){
 
 	cout << "width bitmap 1" << widthBitmap1<<endl;
 	cout << "height bitmap 1" << heightBitmap1 << endl;
+
 	while (running) {
 		al_clear_to_color(al_map_rgba_f(1, 1, 1, 1));
 		al_draw_bitmap(bitmap, x,y, 0);
 		al_draw_bitmap(bitmap2, x2, y2, 0);
 		al_flip_display();
+
 		ALLEGRO_EVENT event;
 		al_wait_for_event(queue, &event);
 		if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
@@ -60,8 +61,7 @@ int main(int argc, char **argv){
 		if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
 		{
 			x += velocity;
-		}
-				
+		}	
 		if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
 		{
 			x -= velocity;
@@ -72,20 +72,20 @@ int main(int argc, char **argv){
 		if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
 			y += velocity;
 		}
+
 		cout << "posx1 " << x << endl;
 		cout << "posx2 " << x2 << endl;
-		if (x + widthBitmap1 > x2&&x<x2+widthBitmap2&&y<y2+heightBitmap2&&y + heightBitmap1 > y2) {
+
+		if (x + widthBitmap1 > x2 && x < x2 + widthBitmap2 && y<y2 + heightBitmap2 && y + heightBitmap1 > y2) {
 			cout << "contacto" << endl;
 			running = false;
-				
 		}
-
 	}
 
 	al_destroy_display(display);
 	al_uninstall_keyboard();
 	al_destroy_bitmap(bitmap);
+	al_destroy_bitmap(bitmap2);
+
 	return 0;
-
-
 }

@@ -1,1 +1,5 @@
 1- Se modificó el archivo ".gitignore" debido a que estaba seteado para no tomar como parte de los commits, las carpetas con nombre "Bin", por lo que la carpeta en cuestión que forma parte de la carpeta "allegro_5.1.12_x86", nunca fue pusheada y por lo tanto las dll's que contenía no eran copiadas a las carpetas debidas.
+
+2- Se agregó un "al_destroy_bitmap" para destruir el puntero bitmap2.
+
+3- Se eliminó un struct que no estaba siendo utilizado para nada.
