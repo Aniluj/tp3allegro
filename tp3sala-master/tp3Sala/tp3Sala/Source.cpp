@@ -2,6 +2,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <iostream>
 
 using namespace std;
@@ -22,6 +24,7 @@ int main(int argc, char **argv){
 	ALLEGRO_BITMAP * playerBitmap = NULL;
 	ALLEGRO_BITMAP *enemieBitmap = NULL;
 	ALLEGRO_BITMAP *enemie2Bitmap = NULL;
+	ALLEGRO_FONT *menuFont = NULL;
 
 	al_init();
 
@@ -33,11 +36,14 @@ int main(int argc, char **argv){
 
 	al_install_keyboard();
 	al_init_image_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
 
 	playerBitmap = al_load_bitmap("Blue_01.png");
 	enemieBitmap = al_load_bitmap("Blue_01.png");
 	enemie2Bitmap = al_load_bitmap("Blue_01.png");
 
+	bool inMenu = true;
 	bool running = true;
 
 	float widthPlayerBitmap = al_get_bitmap_width(playerBitmap);
@@ -59,7 +65,7 @@ int main(int argc, char **argv){
 
 	float enemieX = 400;
 	float enemieY = 400;
-	float enemieMovementSpeed = 5.0f;
+	float enemieMovementSpeed = 3.5f;
 
 	float enemie2X = 300;
 	float enemie2Y = 0;
@@ -78,74 +84,95 @@ int main(int argc, char **argv){
 
 	al_start_timer(timer);
 
+	menuFont = al_load_font("BAUHS93.TTF", 38, NULL);
+
 	while (running){
 
-		ALLEGRO_EVENT events;
-		al_wait_for_event(queue, &events);
+			ALLEGRO_EVENT events;
+			al_wait_for_event(queue, &events);
+			al_clear_to_color(al_map_rgba_f(1, 1, 1, 1));
 
-		al_clear_to_color(al_map_rgba_f(1, 1, 1, 1));
-		al_draw_bitmap(playerBitmap, playerX,playerY, 0);
-		al_draw_bitmap(enemieBitmap, enemieX, enemieY, 0);
-		al_draw_bitmap(enemie2Bitmap, enemie2X, enemie2Y, 0);
-		al_flip_display();
-
-		if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-			running = false;
-
-		if (events.type == ALLEGRO_EVENT_TIMER){
-
-			al_get_keyboard_state(&keyState);
-			if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
-			{
-				playerX += playerMovementSpeed;
-			}
-			if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
-			{
-				playerX -= playerMovementSpeed;
-			}
-			if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
-				playerY -= playerMovementSpeed;
-			}
-			if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
-				playerY += playerMovementSpeed;
-			}
-
-			cout << "posx1 " << playerX << endl;
-			cout << "posx2 " << enemieX << endl;
-
-			if (Collision(playerX, playerY, enemieX, enemieY, widthPlayerBitmap, heightPlayerBitmap, widthEnemieBitmap, heightEnemieBitmap) || Collision(playerX, playerY, enemie2X, enemie2Y, widthPlayerBitmap, heightPlayerBitmap, widthEnemie2Bitmap, heightEnemie2Bitmap)) {
-				cout << "contacto" << endl;
-				running = false;
-			}
-
-			if (!enemieGoingUp) {
-				enemieY += enemieMovementSpeed;
-			}
-			if (enemieGoingUp) {
-				enemieY -= enemieMovementSpeed;
-			}
-			if (enemieY + heightEnemieBitmap >= displayHeight) {
-				enemieGoingUp = true;
-			}
-			else if (enemieY <= 0) {
-				enemieGoingUp = false;
-			}
-
-			if (!enemie2GoingRight) {
-				enemie2X += enemie2MovementSpeed;
+			if (!inMenu) {
+				al_draw_bitmap(playerBitmap, playerX, playerY, 0);
+				al_draw_bitmap(enemieBitmap, enemieX, enemieY, 0);
+				al_draw_bitmap(enemie2Bitmap, enemie2X, enemie2Y, 0);
 			}
 			else {
-				enemie2X -= enemie2MovementSpeed;
+				al_draw_text(menuFont, al_map_rgb(44, 117, 255), displayWidth / 2, displayHeight / 2, ALLEGRO_ALIGN_CENTRE, "Please, press enter to start");
 			}
-			if (enemie2X + widthEnemie2Bitmap >= displayWidth) {
-				enemie2GoingRight = true;
+			al_flip_display();
+
+			if (events.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+				running = false;
+
+			if (events.type == ALLEGRO_EVENT_TIMER) {
+
+				al_get_keyboard_state(&keyState);
+
+				if (!inMenu) {
+					if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
+					{
+						playerX += playerMovementSpeed;
+					}
+					if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
+					{
+						playerX -= playerMovementSpeed;
+					}
+					if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
+						playerY -= playerMovementSpeed;
+					}
+					if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
+						playerY += playerMovementSpeed;
+					}
+
+					cout << "posx1 " << playerX << endl;
+					cout << "posx2 " << enemieX << endl;
+
+					if (Collision(playerX, playerY, enemieX, enemieY, widthPlayerBitmap, heightPlayerBitmap, widthEnemieBitmap, heightEnemieBitmap) || Collision(playerX, playerY, enemie2X, enemie2Y, widthPlayerBitmap, heightPlayerBitmap, widthEnemie2Bitmap, heightEnemie2Bitmap)) {
+						cout << "contacto" << endl;
+						playerLife -= 1;
+						playerX = initialPlayerX;
+						playerY = initialPlayerY;
+						if (playerLife == 0) {
+							running = false;
+						}
+					}
+
+					if (!enemieGoingUp) {
+						enemieY += enemieMovementSpeed;
+					}
+					if (enemieGoingUp) {
+						enemieY -= enemieMovementSpeed;
+					}
+					if (enemieY + heightEnemieBitmap >= displayHeight) {
+						enemieGoingUp = true;
+					}
+					else if (enemieY <= 0) {
+						enemieGoingUp = false;
+					}
+
+					if (!enemie2GoingRight) {
+						enemie2X += enemie2MovementSpeed;
+					}
+					else {
+						enemie2X -= enemie2MovementSpeed;
+					}
+					if (enemie2X + widthEnemie2Bitmap >= displayWidth) {
+						enemie2GoingRight = true;
+					}
+					else if (enemie2X <= 0) {
+						enemie2GoingRight = false;
+					}
+				}
+				else {
+					if (al_key_down(&keyState, ALLEGRO_KEY_ENTER)) {
+						inMenu = false;
+					}
+				}
 			}
-			else if (enemie2X <= 0) {
-				enemie2GoingRight = false;
-			}
-		}
 	}
 
+	al_destroy_font(menuFont);
 	al_destroy_display(display);
 	al_uninstall_keyboard();
 	al_destroy_bitmap(playerBitmap);
