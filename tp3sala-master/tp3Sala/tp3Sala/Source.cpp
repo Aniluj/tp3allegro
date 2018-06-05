@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
-#include<allegro5/allegro_image.h>
-#include<allegro5/allegro_native_dialog.h>
-#include<iostream>
+#include <allegro5/allegro_image.h>
+#include <allegro5/allegro_native_dialog.h>
+#include <iostream>
 
 using namespace std;
 
@@ -16,6 +16,7 @@ int main(int argc, char **argv){
 	ALLEGRO_BITMAP *bitmap2 = NULL;
 
 	al_init();
+
 	display = al_create_display(800, 600);
 	queue = al_create_event_queue();
 

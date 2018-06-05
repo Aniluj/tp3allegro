@@ -3,3 +3,7 @@
 2- Se agregó un "al_destroy_bitmap" para destruir el puntero bitmap2.
 
 3- Se eliminó un struct que no estaba siendo utilizado para nada.
+
+4- Se eliminó la dependencia "allegro_acodec-debug.lib" que estaba en la versión debug ya que no se estaba utilizando para nada. También se eliminó el copy que se le estaba haciendo a la dll correspondiente.
+
+5- La versión Release no funcionaba ya que contenía las dependencias correspondientes a la versión debug e incluso faltaban algunas. Lo mismo ocurría en los eventos posteriores a la compilación, los comandos copy iban destinados a las dll de debug. Por lo cual lo que se hizo tanto para las dependecias como para las dll que eran copiadas, fue reemplazar todo por lo correspondiente a la versión release.
