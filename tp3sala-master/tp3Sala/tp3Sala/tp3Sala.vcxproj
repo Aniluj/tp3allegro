@@ -66,10 +66,7 @@ copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_dialog-debug-5.1.dll" "$(OutD
 copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_acodec-debug-5.1.dll" "$(OutDir)"
 copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_audio-debug-5.1.dll" "$(OutDir)"
 copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_font-debug-5.1.dll" "$(OutDir)"
-copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_ttf-debug-5.1.dll" "$(OutDir)"
-
-
-</Command>
+copy "$(SolutionDir)allegro_5.1.12_x86\bin\allegro_ttf-debug-5.1.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -4,6 +4,8 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_audio.h>
 #include <iostream>
 
 using namespace std;
@@ -34,7 +36,9 @@ int main(int argc, char **argv){
 
 	display = al_create_display(displayWidth, displayHeight);
 
+	al_install_audio();
 	al_install_keyboard();
+	al_init_acodec_addon();
 	al_init_image_addon();
 	al_init_font_addon();
 	al_init_ttf_addon();
@@ -81,6 +85,15 @@ int main(int argc, char **argv){
 	ALLEGRO_TIMER *timer = al_create_timer(1.0 / fps);
 	al_register_event_source(queue, al_get_keyboard_event_source());
 	al_register_event_source(queue, al_get_timer_event_source(timer));
+
+	al_reserve_samples(1);
+
+	ALLEGRO_SAMPLE *music = al_load_sample("Main menu song.wav");
+	ALLEGRO_SAMPLE_INSTANCE *musicInstance = al_create_sample_instance(music);
+	al_set_sample_instance_playmode(musicInstance, ALLEGRO_PLAYMODE_LOOP);
+	al_attach_sample_instance_to_mixer(musicInstance, al_get_default_mixer());
+
+	al_play_sample_instance(musicInstance);
 
 	al_start_timer(timer);
 
@@ -172,6 +185,7 @@ int main(int argc, char **argv){
 			}
 	}
 
+	al_destroy_event_queue(queue);
 	al_destroy_font(menuFont);
 	al_destroy_display(display);
 	al_uninstall_keyboard();
@@ -179,6 +193,8 @@ int main(int argc, char **argv){
 	al_destroy_bitmap(enemieBitmap);
 	al_destroy_bitmap(enemie2Bitmap);
 	al_destroy_timer(timer);
+	al_destroy_sample(music);
+	al_destroy_sample_instance(musicInstance);
 
 	return 0;
 }
