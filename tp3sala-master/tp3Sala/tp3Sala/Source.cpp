@@ -6,18 +6,30 @@
 
 using namespace std;
 
+bool Collision(int pX, int pY, int eX, int eY, int pWidth, int pHeight, int eWidth, int eHeight) {
+	if (pX + pWidth<eX || pX > eX + eWidth || pY + pHeight < eY || pY > eY + eHeight) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
 
 int main(int argc, char **argv){
 
 
 	ALLEGRO_DISPLAY * display;
 	ALLEGRO_EVENT_QUEUE *queue;
-	ALLEGRO_BITMAP * bitmap = NULL;
-	ALLEGRO_BITMAP *bitmap2 = NULL;
+	ALLEGRO_BITMAP * playerBitmap = NULL;
+	ALLEGRO_BITMAP *enemieBitmap = NULL;
+	ALLEGRO_BITMAP *enemie2Bitmap = NULL;
 
 	al_init();
 
-	display = al_create_display(800, 600);
+	const int displayWidth = 800;
+	const int displayHeight = 600;
+
+	display = al_create_display(displayWidth, displayHeight);
 	queue = al_create_event_queue();
 
 	al_install_keyboard();
@@ -25,31 +37,42 @@ int main(int argc, char **argv){
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_init_image_addon();
 
-	bitmap = al_load_bitmap("Blue_01.png");
-	bitmap2 = al_load_bitmap("Blue_01.png");
+	playerBitmap = al_load_bitmap("Blue_01.png");
+	enemieBitmap = al_load_bitmap("Blue_01.png");
+	enemie2Bitmap = al_load_bitmap("Blue_01.png");
 
 	bool running = true;
 
-	float x = 0;
-	float y = 0;
+	float widthPlayerBitmap = al_get_bitmap_width(playerBitmap);
+	float heightPlayerBitmap = al_get_bitmap_height(playerBitmap);
 
-	float x2 = 300;
-	float y2 = 300;
+	float widthEnemieBitmap = al_get_bitmap_width(enemieBitmap);
+	float heightEnemieBitmap = al_get_bitmap_height(enemieBitmap);
+
+	float widthEnemie2Bitmap = al_get_bitmap_width(enemieBitmap);
+	float heightEnemie2Bitmap = al_get_bitmap_height(enemieBitmap);
+
+	float initialPlayerX = 0;
+	float initialPlayerY = (displayHeight / 2) - heightPlayerBitmap;
+	float playerX = initialPlayerX;
+	float playerY = initialPlayerY;
+
+	float enemieX = 400;
+	float enemieY = 400;
+
+	float enemie2X = 300;
+	float enemie2Y = 0;
+
 	float velocity = 4.5f;
 
-	float widthBitmap1 = al_get_bitmap_width(bitmap);
-	float heightBitmap1 = al_get_bitmap_height(bitmap);
-
-	float widthBitmap2 = al_get_bitmap_width(bitmap2);
-	float heightBitmap2 = al_get_bitmap_height(bitmap2);
-
-	cout << "width bitmap 1" << widthBitmap1<<endl;
-	cout << "height bitmap 1" << heightBitmap1 << endl;
+	cout << "width bitmap 1" << widthPlayerBitmap<<endl;
+	cout << "height bitmap 1" << heightPlayerBitmap << endl;
 
 	while (running) {
 		al_clear_to_color(al_map_rgba_f(1, 1, 1, 1));
-		al_draw_bitmap(bitmap, x,y, 0);
-		al_draw_bitmap(bitmap2, x2, y2, 0);
+		al_draw_bitmap(playerBitmap, playerX,playerY, 0);
+		al_draw_bitmap(enemieBitmap, enemieX, enemieY, 0);
+		al_draw_bitmap(enemie2Bitmap, enemie2X, enemie2Y, 0);
 		al_flip_display();
 
 		ALLEGRO_EVENT event;
@@ -61,23 +84,23 @@ int main(int argc, char **argv){
 		al_get_keyboard_state(&keyState);
 		if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
 		{
-			x += velocity;
+			playerX += velocity;
 		}	
 		if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
 		{
-			x -= velocity;
+			playerX -= velocity;
 		}
 		if (al_key_down(&keyState, ALLEGRO_KEY_UP)) {
-			y -= velocity;
+			playerY -= velocity;
 		}
 		if (al_key_down(&keyState, ALLEGRO_KEY_DOWN)) {
-			y += velocity;
+			playerY += velocity;
 		}
 
-		cout << "posx1 " << x << endl;
-		cout << "posx2 " << x2 << endl;
+		cout << "posx1 " << playerX << endl;
+		cout << "posx2 " << enemieX << endl;
 
-		if (x + widthBitmap1 > x2 && x < x2 + widthBitmap2 && y<y2 + heightBitmap2 && y + heightBitmap1 > y2) {
+		if (Collision(playerX, playerY, enemieX, enemieY, widthPlayerBitmap, heightPlayerBitmap, widthEnemieBitmap, heightEnemieBitmap) || Collision(playerX, playerY, enemie2X, enemie2Y, widthPlayerBitmap, heightPlayerBitmap, widthEnemie2Bitmap, heightEnemie2Bitmap)) {
 			cout << "contacto" << endl;
 			running = false;
 		}
@@ -85,8 +108,8 @@ int main(int argc, char **argv){
 
 	al_destroy_display(display);
 	al_uninstall_keyboard();
-	al_destroy_bitmap(bitmap);
-	al_destroy_bitmap(bitmap2);
+	al_destroy_bitmap(playerBitmap);
+	al_destroy_bitmap(enemieBitmap);
 
 	return 0;
 }
